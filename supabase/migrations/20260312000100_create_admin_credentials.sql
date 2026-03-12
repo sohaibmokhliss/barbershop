@@ -3,8 +3,6 @@
 --   username: yassinem9
 --   password: R4zor!Yassine_M9#2026@Casa
 
-create extension if not exists pgcrypto;
-
 create table if not exists admin_credentials (
   id            uuid        primary key default gen_random_uuid(),
   username      text        not null unique,
@@ -15,7 +13,7 @@ create table if not exists admin_credentials (
 insert into admin_credentials (username, password_hash)
 values (
   'yassinem9',
-  encode(digest('R4zor!Yassine_M9#2026@Casa', 'sha256'), 'hex')
+  'dcb074d766b4b030104324a56367daeb5dc01950c12666d32c868cf2785f2544'
 )
 on conflict (username) do update
 set password_hash = excluded.password_hash;
