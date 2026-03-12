@@ -20,8 +20,9 @@ function fromDateKey(dateKey: string): Date {
 }
 
 function toTimeKey(date: Date): string {
+  const flooredMinutes = date.getMinutes() < 30 ? 0 : 30;
   const hour = String(date.getHours()).padStart(2, '0');
-  const minute = String(date.getMinutes()).padStart(2, '0');
+  const minute = String(flooredMinutes).padStart(2, '0');
   return `${hour}:${minute}`;
 }
 
@@ -83,7 +84,7 @@ function formatAppointmentTime(iso: string): string {
 
 function buildSlots(): string[] {
   const slots: string[] = [];
-  for (let hour = 8; hour <= 19; hour++) {
+  for (let hour = 0; hour <= 23; hour++) {
     slots.push(`${String(hour).padStart(2, '0')}:00`);
     slots.push(`${String(hour).padStart(2, '0')}:30`);
   }
