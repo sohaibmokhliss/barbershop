@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Appointment } from '@/lib/types';
@@ -193,12 +194,20 @@ export default function RendezvousClient({
           <span className="text-2xl">🪒</span>
           <span className="font-bold text-lg">Yassine — Rendez-vous</span>
         </div>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-gray-400 hover:text-white underline transition"
-        >
-          Déconnexion
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/calendrier"
+            className="text-sm text-gray-300 hover:text-white underline transition"
+          >
+            Calendrier
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="text-sm text-gray-400 hover:text-white underline transition"
+          >
+            Déconnexion
+          </button>
+        </div>
       </header>
 
       {/* Main */}
