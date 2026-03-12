@@ -9,15 +9,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  const sessionSecret = process.env.SESSION_SECRET;
+  const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+  const sessionSecret = process.env.SESSION_SECRET?.trim();
 
   if (!adminPassword || !sessionSecret) {
     console.error('Missing ADMIN_PASSWORD or SESSION_SECRET environment variable');
     return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
   }
 
-  if (body.password !== adminPassword) {
+  const submitted = typeof body.password === 'string' ? body.password.trim() : '';
+
+  if (submitted !== adminPassword) {
     return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 });
   }
 
