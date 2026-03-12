@@ -3,7 +3,7 @@ import { verifySessionToken, COOKIE_NAME } from '@/lib/session';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const secret = process.env.SESSION_SECRET ?? '';
+  const secret = process.env.SESSION_SECRET?.trim() ?? '';
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const valid = await verifySessionToken(token, secret);
 
