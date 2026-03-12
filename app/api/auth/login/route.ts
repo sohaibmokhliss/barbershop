@@ -18,11 +18,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
   }
 
-  const submittedLogin = typeof body.login === 'string' ? body.login.trim() : 'yassinem9';
+  const submittedLogin = typeof body.login === 'string' ? body.login.trim() : '';
   const submittedPassword = typeof body.password === 'string' ? body.password.trim() : '';
 
-  if (!submittedPassword) {
-    return NextResponse.json({ error: 'Mot de passe requis' }, { status: 400 });
+  if (!submittedLogin || !submittedPassword) {
+    return NextResponse.json({ error: 'Identifiant et mot de passe requis' }, { status: 400 });
   }
 
   const passwordHash = createHash('sha256').update(submittedPassword).digest('hex');
