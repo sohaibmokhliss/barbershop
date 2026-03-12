@@ -1,33 +1,33 @@
-# Barbershop Yassine — Personnel Web App
+# Barbershop Yassine - Personnel Web App
 
-A minimal, production-ready Next.js application for barber Yassine to manage
-appointments (rendez-vous). Protected by a single shared admin password —
-no public booking, no user accounts.
+A minimal, production-ready Next.js app for barber Yassine to manage
+appointments (rendez-vous). The personnel dashboard is protected with a
+Supabase-backed login.
 
 ## Tech stack
 
-- **Next.js 15** (App Router, TypeScript)
-- **Tailwind CSS** for styling
-- **Supabase Postgres** for persistence (server-side only via service role key)
-- **HMAC-SHA256 signed cookies** for session management
-- **Vercel** for deployment
+- Next.js 15 (App Router, TypeScript)
+- Tailwind CSS
+- Supabase Postgres (server-side only with service role key)
+- Signed session cookie (HMAC-SHA256)
+- Vercel
 
 ---
 
 ## Required environment variables
 
-| Variable                  | Description                                                      |
-| ------------------------- | ---------------------------------------------------------------- |
-| `ADMIN_PASSWORD`          | The single login password for the dashboard                      |
-| `SUPABASE_URL`            | Your Supabase project URL (`https://xxx.supabase.co`)            |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (secret — never expose to browser)   |
-| `SESSION_SECRET`          | Random string (≥ 32 chars) used to sign session cookies          |
+| Variable | Description |
+| --- | --- |
+| `SUPABASE_URL` | Your Supabase project URL (`https://xxx.supabase.co`) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server secret) |
+| `SESSION_SECRET` | Random secret used to sign session cookies |
 
-> **Security note:** `ADMIN_PASSWORD`, `SUPABASE_SERVICE_ROLE_KEY`, and
-> `SESSION_SECRET` are server-only variables. They must **never** be prefixed
-> with `NEXT_PUBLIC_` and are never sent to the browser.
+Security note:
+- `SUPABASE_SERVICE_ROLE_KEY` and `SESSION_SECRET` are server-only.
+- Do not expose them with `NEXT_PUBLIC_`.
 
 Generate a strong `SESSION_SECRET`:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -36,124 +36,82 @@ openssl rand -base64 32
 
 ## Local development
 
-### Prerequisites
+1. Clone and install dependencies:
 
-- Node.js 18+
-- A Supabase project (free tier works)
+```bash
+git clone https://github.com/sohaibmokhliss/barbershop.git
+cd barbershop
+npm install
+```
 
-### Steps
+2. Create `.env.local` from the template:
 
-1. **Clone and install dependencies:**
-   ```bash
-   git clone https://github.com/sohaibmokhliss/barbershop.git
-   cd barbershop
-   npm install
-   ```
+```bash
+cp .env.local.example .env.local
+```
 
-2. **Create your local environment file:**
-   ```bash
-   cp .env.local.example .env.local
-   ```
-   Fill in the four variables in `.env.local`.
+3. Fill in `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `SESSION_SECRET`.
 
-3. **Run the SQL migration** (see section below).
+4. Run both SQL migrations in Supabase SQL Editor:
 
-4. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000).
+```sql
+-- 1) appointments table
+\i supabase/migrations/20260311000000_create_appointments.sql
+
+-- 2) admin credentials table + default credential
+\i supabase/migrations/20260312000100_create_admin_credentials.sql
+```
+
+If your SQL editor does not support `\i`, open each file and run it manually.
+
+5. Start the app:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
 
 ---
 
-## Running the SQL migration in Supabase
+## Default personnel credentials
 
-1. Go to your Supabase project → **SQL Editor**.
-2. Open a new query and paste the contents of:
-   ```
-   supabase/migrations/20260311000000_create_appointments.sql
-   ```
-3. Click **Run**.
+Created by migration `supabase/migrations/20260312000100_create_admin_credentials.sql`:
 
-This creates the `appointments` table and an index on `starts_at`.
+- Login: `yassinem9`
+- Password: `R4zor!Yassine_M9#2026@Casa`
 
----
-
-## Project structure
-
-```
-barbershop/
-├── app/
-│   ├── api/
-│   │   ├── auth/
-│   │   │   ├── login/route.ts      # POST — verify password, set cookie
-│   │   │   └── logout/route.ts     # POST — clear cookie
-│   │   └── appointments/
-│   │       ├── route.ts            # GET (list) + POST (create)
-│   │       └── [id]/route.ts       # PATCH (update) + DELETE
-│   ├── admin/rendezvous/
-│   │   ├── page.tsx                # Server component — fetches initial data
-│   │   └── RendezvousClient.tsx    # Client component — CRUD UI
-│   ├── login/page.tsx              # Login form
-│   ├── page.tsx                    # Public home page
-│   ├── layout.tsx
-│   └── globals.css
-├── lib/
-│   ├── session.ts                  # HMAC session token helpers
-│   ├── supabase.ts                 # Server-side Supabase client
-│   └── types.ts                    # Shared TypeScript types
-├── middleware.ts                   # Auth guard (Edge Runtime)
-├── supabase/migrations/
-│   └── 20260311000000_create_appointments.sql
-└── .env.local.example
-```
+To change it, update the migration seed statement or update the row in
+`admin_credentials`.
 
 ---
 
 ## Vercel deployment
 
-1. **Push the repo to GitHub** (the `.gitignore` already excludes `.env.local`).
-
-2. **Import the project** on [vercel.com/new](https://vercel.com/new).
-
-3. **Add environment variables** in the Vercel project settings → **Environment Variables**:
-   - `ADMIN_PASSWORD`
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `SESSION_SECRET`
-
-4. Vercel auto-detects Next.js and deploys with the correct build command (`next build`) and output directory.
-
-5. After the first deploy, run the SQL migration in Supabase (if you haven't already).
+1. Push the repo to GitHub.
+2. Import the repository at `vercel.com/new`.
+3. Add these environment variables in Vercel project settings:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SESSION_SECRET`
+4. Deploy.
+5. Ensure both Supabase SQL migrations are already run.
 
 ---
 
 ## Authentication flow
 
-```
-Browser                         Server (middleware)          Login API
-  |                                    |                         |
-  |-- GET /admin/rendezvous ---------> |                         |
-  |                          checks cookie (HMAC)                |
-  |<-- 302 /login (no valid cookie) ---|                         |
-  |                                                              |
-  |-- POST /api/auth/login (password) -----------------------> |
-  |                                              verify vs ADMIN_PASSWORD
-  |                                              create HMAC-signed token
-  |<-- 200 OK + Set-Cookie: session=... ----------------------- |
-  |                                                              |
-  |-- GET /admin/rendezvous ---------> |                         |
-  |                          HMAC verified ✓                     |
-  |<-- 200 Dashboard ------------------|                         |
-```
+1. Browser posts `login + password` to `POST /api/auth/login`.
+2. API hashes password with SHA-256.
+3. API validates against Supabase table `admin_credentials`.
+4. On success, API sets secure `httpOnly` session cookie.
+5. Middleware allows `/admin/*` and `/api/appointments/*` only with valid cookie.
 
 ---
 
 ## npm scripts
 
-| Command       | Description                     |
-| ------------- | ------------------------------- |
-| `npm run dev`   | Start local dev server          |
-| `npm run build` | Build for production            |
-| `npm run start` | Start production server locally |
-| `npm run lint`  | Run ESLint                      |
+- `npm run dev` - start dev server
+- `npm run build` - production build
+- `npm run start` - run production server
+- `npm run lint` - run ESLint
