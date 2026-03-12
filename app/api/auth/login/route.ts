@@ -17,9 +17,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
   }
 
-  // Debug: remove after confirming login works
-  console.log('ENV password length:', adminPassword.length, '| Submitted length:', String(body.password).length);
-
   if (body.password !== adminPassword) {
     return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 });
   }
