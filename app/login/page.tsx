@@ -22,8 +22,7 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
-        router.push('/admin/rendezvous');
-        router.refresh();
+        window.location.href = '/admin/rendezvous';
       } else {
         const data = await res.json();
         setError(data.error ?? 'Mot de passe incorrect');
