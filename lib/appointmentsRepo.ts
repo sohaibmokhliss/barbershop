@@ -20,7 +20,7 @@ type GlobalWithMock = typeof globalThis & {
   __mockAppointments?: Appointment[];
 };
 
-function useMockAppointments(): boolean {
+function isMockAppointmentsEnabled(): boolean {
   return (
     process.env.NODE_ENV !== 'production' &&
     process.env.DEV_USE_MOCK_APPOINTMENTS === 'true'
@@ -43,7 +43,7 @@ function sortByStartsAt(items: Appointment[]): Appointment[] {
 }
 
 export async function listAppointments(): Promise<RepoResult<Appointment[]>> {
-  if (useMockAppointments()) {
+  if (isMockAppointmentsEnabled()) {
     return { data: sortByStartsAt(getMockStore()), error: null };
   }
 
@@ -61,7 +61,7 @@ export async function listAppointments(): Promise<RepoResult<Appointment[]>> {
 export async function createAppointment(
   input: AppointmentInput,
 ): Promise<RepoResult<Appointment | null>> {
-  if (useMockAppointments()) {
+  if (isMockAppointmentsEnabled()) {
     const now = new Date().toISOString();
     const created: Appointment = {
       id: crypto.randomUUID(),
@@ -93,7 +93,7 @@ export async function updateAppointment(
   id: string,
   update: AppointmentUpdate,
 ): Promise<RepoResult<Appointment | null>> {
-  if (useMockAppointments()) {
+  if (isMockAppointmentsEnabled()) {
     const store = getMockStore();
     const idx = store.findIndex((item) => item.id === id);
     if (idx < 0) return { data: null, error: null };
@@ -123,7 +123,7 @@ export async function updateAppointment(
 }
 
 export async function deleteAppointment(id: string): Promise<RepoResult<null>> {
-  if (useMockAppointments()) {
+  if (isMockAppointmentsEnabled()) {
     const store = getMockStore();
     const initialLen = store.length;
     const next = store.filter((item) => item.id !== id);
@@ -145,7 +145,7 @@ export async function deleteAppointment(id: string): Promise<RepoResult<null>> {
 export async function deletePastAppointments(
   nowIso: string,
 ): Promise<RepoResult<number>> {
-  if (useMockAppointments()) {
+  if (isMockAppointmentsEnabled()) {
     const store = getMockStore();
     const next = store.filter(
       (item) => new Date(item.starts_at).getTime() >= new Date(nowIso).getTime(),
