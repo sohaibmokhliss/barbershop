@@ -271,18 +271,21 @@ export default function RendezvousClient({
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   {[
-                    'Client',
-                    'Téléphone',
-                    'Date & Heure',
-                    'Service',
-                    'Notes',
-                    '',
+                    { label: 'Client', className: '' },
+                    { label: 'Téléphone', className: '' },
+                    { label: 'Date & Heure', className: '' },
+                    { label: 'Service', className: 'hidden md:table-cell' },
+                    { label: 'Notes', className: 'hidden md:table-cell' },
+                    {
+                      label: 'Actions',
+                      className: 'sticky right-0 z-20 bg-gray-50 shadow-[-8px_0_8px_-8px_rgba(0,0,0,0.12)]',
+                    },
                   ].map((h) => (
                     <th
-                      key={h}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide"
+                      key={h.label}
+                      className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide ${h.className}`}
                     >
-                      {h}
+                      {h.label}
                     </th>
                   ))}
                 </tr>
@@ -301,13 +304,13 @@ export default function RendezvousClient({
                     <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
                       {formatDate(apt.starts_at)}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="hidden md:table-cell px-4 py-3 text-gray-600">
                       {apt.service ?? <span className="text-gray-300">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
+                    <td className="hidden md:table-cell px-4 py-3 text-gray-500 max-w-xs truncate">
                       {apt.notes ?? <span className="text-gray-300">—</span>}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 sticky right-0 z-10 bg-white shadow-[-8px_0_8px_-8px_rgba(0,0,0,0.12)]">
                       <div className="flex gap-3">
                         <button
                           onClick={() => openEdit(apt)}

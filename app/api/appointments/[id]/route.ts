@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { deleteAppointment, updateAppointment } from '@/lib/appointmentsRepo';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,15 +43,10 @@ export async function PATCH(request: NextRequest, context: Context) {
     return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
-    .from('appointments')
-    .update(update)
-    .eq('id', id)
-    .select()
-    .single();
+  const { data, error } = await updateAppointment(id, update);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
   if (!data) {
     return NextResponse.json({ error: 'Appointment not found' }, { status: 404 });
@@ -67,13 +62,10 @@ export async function DELETE(_request: NextRequest, context: Context) {
     return NextResponse.json({ error: 'Invalid appointment ID' }, { status: 400 });
   }
 
-  const { error } = await supabase
-    .from('appointments')
-    .delete()
-    .eq('id', id);
+  const { error } = await deleteAppointment(id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
   return new NextResponse(null, { status: 204 });
 }

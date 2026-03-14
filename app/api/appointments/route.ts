@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createAppointment, listAppointments } from '@/lib/appointmentsRepo';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/appointments — list all appointments ordered by starts_at
 export async function GET() {
-  const { data, error } = await supabase
-    .from('appointments')
-    .select('*')
-    .order('starts_at', { ascending: true });
+  const { data, error } = await listAppointments();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
   return NextResponse.json(data);
 }
@@ -34,20 +31,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'starts_at is required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
-    .from('appointments')
-    .insert({
-      client_name: (client_name as string).trim(),
-      client_phone: typeof client_phone === 'string' && client_phone.trim() ? client_phone.trim() : null,
-      starts_at,
-      service: typeof service === 'string' && service.trim() ? service.trim() : null,
-      notes: typeof notes === 'string' && notes.trim() ? notes.trim() : null,
-    })
-    .select()
-    .single();
+  const { data, error } = await createAppointment({
+    client_name: (client_name as string).trim(),
+    client_phone:
+      typeof client_phone === 'string' && client_phone.trim()
+        ? client_phone.trim()
+        : null,
+    starts_at,
+    service: typeof service === 'string' && service.trim() ? service.trim() : null,
+    notes: typeof notes === 'string' && notes.trim() ? notes.trim() : null,
+  });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
   return NextResponse.json(data, { status: 201 });
 }

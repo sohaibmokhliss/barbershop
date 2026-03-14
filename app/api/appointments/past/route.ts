@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { deletePastAppointments } from '@/lib/appointmentsRepo';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,14 +7,11 @@ export const dynamic = 'force-dynamic';
 export async function DELETE() {
   const now = new Date().toISOString();
 
-  const { error, count } = await supabase
-    .from('appointments')
-    .delete({ count: 'exact' })
-    .lt('starts_at', now);
+  const { data: deleted, error } = await deletePastAppointments(now);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 
-  return NextResponse.json({ deleted: count ?? 0 });
+  return NextResponse.json({ deleted });
 }
