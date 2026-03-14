@@ -178,6 +178,31 @@ export default function RendezvousClient({
     }
   }
 
+  async function handleDeletePast() {
+    const now = new Date();
+    const pastAppointments = appointments.filter(
+      (a) => new Date(a.starts_at) < now,
+    );
+    if (pastAppointments.length === 0) {
+      alert('Aucun ancien rendez-vous à supprimer.');
+      return;
+    }
+    if (
+      !confirm(
+        `Supprimer ${pastAppointments.length} ancien${pastAppointments.length > 1 ? 's' : ''} rendez-vous ?`,
+      )
+    )
+      return;
+    const res = await fetch('/api/appointments/past', { method: 'DELETE' });
+    if (res.ok) {
+      setAppointments((prev) =>
+        prev.filter((a) => new Date(a.starts_at) >= now),
+      );
+    } else {
+      alert('Erreur lors de la suppression des anciens rendez-vous.');
+    }
+  }
+
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/login');
@@ -218,12 +243,20 @@ export default function RendezvousClient({
             {appointments.length}{' '}
             {appointments.length === 1 ? 'rendez-vous' : 'rendez-vous'}
           </h2>
-          <button
-            onClick={openCreate}
-            className="bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition text-sm font-medium"
-          >
-            + Nouveau rendez-vous
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleDeletePast}
+              className="border border-red-300 text-red-600 px-4 py-2 rounded-xl hover:bg-red-50 transition text-sm font-medium"
+            >
+              Supprimer les anciens
+            </button>
+            <button
+              onClick={openCreate}
+              className="bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition text-sm font-medium"
+            >
+              + Nouveau rendez-vous
+            </button>
+          </div>
         </div>
 
         {/* Table */}
