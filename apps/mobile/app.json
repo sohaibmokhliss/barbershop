@@ -5,12 +5,31 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.yassine.barbershop",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FBF3E4"
+      }
+    },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FBF3E4"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.yassine.barbershop"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "be3873b4-a226-481a-bae5-7db94848edde"
+      }
+    },
+    "owner": "sohaibmokhliss"
   }
 }
