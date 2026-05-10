@@ -1,0 +1,32 @@
+{
+  "project": {
+    "name": "barbershop",
+    "stack": [
+      "nextjs-15",
+      "typescript",
+      "react-19",
+      "tailwindcss",
+      "supabase"
+    ]
+  },
+  "agents": {
+    "directory": ".claude/agents",
+    "default": "coder"
+  },
+  "skills": {
+    "directory": ".claude/skills",
+    "autoDiscover": true
+  },
+  "codex": {
+    "enabled": true,
+    "notes": [
+      "Prefer repo-local agents and skills over generic defaults.",
+      "Keep service role secrets server-only.",
+      "Validate with lint/build when changes affect runtime behavior."
+    ]
+  },
+  "ruflo": {
+    "template": "full",
+    "adaptedForCodex": true
+  }
+}
