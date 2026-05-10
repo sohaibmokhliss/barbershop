@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { createSessionToken, COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/session';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   let body: { login?: unknown; password?: unknown };
@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
   }
 
   const passwordHash = createHash('sha256').update(submittedPassword).digest('hex');
+  const supabase = getSupabaseClient();
 
   const { data, error } = await supabase
     .from('admin_credentials')

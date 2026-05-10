@@ -1,9 +1,12 @@
 # Dependencies
 node_modules/
+apps/mobile/node_modules/
 
 # Next.js
 .next/
 out/
+apps/mobile/.expo/
+apps/mobile/dist/
 
 # Environment variables
 .env
@@ -19,3 +22,9 @@ yarn-error.log*
 
 # Vercel
 .vercel
+
+# Agent runtime state
+.claude-flow/
+.swarm/
+vectors.db
+.codex

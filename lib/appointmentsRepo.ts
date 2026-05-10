@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseClient } from '@/lib/supabase';
 import type { Appointment } from '@/lib/types';
 
 type AppointmentInput = {
@@ -48,6 +48,7 @@ export async function listAppointments(): Promise<RepoResult<Appointment[]>> {
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('appointments')
       .select('*')
@@ -78,6 +79,7 @@ export async function createAppointment(
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('appointments')
       .insert(input)
@@ -110,6 +112,7 @@ export async function updateAppointment(
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('appointments')
       .update(update)
@@ -135,6 +138,7 @@ export async function deleteAppointment(id: string): Promise<RepoResult<null>> {
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { error } = await supabase.from('appointments').delete().eq('id', id);
     return { data: null, error: error?.message ?? null };
   } catch {
@@ -155,6 +159,7 @@ export async function deletePastAppointments(
   }
 
   try {
+    const supabase = getSupabaseClient();
     const { error, count } = await supabase
       .from('appointments')
       .delete({ count: 'exact' })

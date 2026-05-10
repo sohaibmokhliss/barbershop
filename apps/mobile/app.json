@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Barbershop Yassine",
+    "slug": "barbershop-yassine",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.yassine.barbershop"
+    }
+  }
+}
