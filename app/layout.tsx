@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Barbershop Yassine',
   description: 'Barbershop professionnel — Coupe, barbe, style.',
   icons: {
-    icon: '/logo-192.png',
+    icon: '/brand-logo-192.png',
     apple: '/apple-icon.png',
   },
 };

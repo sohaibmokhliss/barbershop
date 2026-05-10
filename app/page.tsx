@@ -14,12 +14,26 @@ export default async function HomePage() {
             <div className="flex flex-col">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-xl">
+                  <div className="mb-5 flex items-center gap-4">
+                    <div className="overflow-hidden rounded-[1.25rem] border border-amber-200/80 bg-slate-950 p-2 shadow-sm">
+                      <Image
+                        src="/brand-logo-192.png"
+                        alt="Logo Barbershop Yassine"
+                        width={56}
+                        height={56}
+                        className="h-14 w-14 rounded-[0.9rem]"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+                        Barbershop Yassine
+                      </p>
+                      <p className="mt-2 text-sm text-slate-500">Ancienne Médina · Casablanca</p>
+                    </div>
+                  </div>
                   <div className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-sm font-semibold text-amber-800">
                     Disponibilité du salon
                   </div>
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
-                    Barbershop Yassine · Ancienne Médina
-                  </p>
                 </div>
               </div>
 

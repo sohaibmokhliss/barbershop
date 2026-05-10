@@ -309,7 +309,12 @@ export function useBarberApp() {
           loadCursor(),
         ]);
 
-      setServerUrlState(storedUrl || getDefaultBackendUrl());
+      const defaultUrl = getDefaultBackendUrl();
+      const resolvedUrl = defaultUrl || storedUrl;
+      setServerUrlState(resolvedUrl);
+      if (resolvedUrl && resolvedUrl !== storedUrl) {
+        await saveServerUrl(resolvedUrl);
+      }
       setAuth(storedSession);
       setAppointments(sortAppointments(storedAppointments));
       setQueue(storedQueue);
@@ -417,10 +422,6 @@ export function useBarberApp() {
     setAuthError(null);
     setSyncError(null);
     await clearSession();
-  }
-
-  async function setServerUrl(nextUrl: string) {
-    await persistServerUrl(nextUrl);
   }
 
   async function createAppointment(input: AppointmentDraft) {
@@ -574,8 +575,6 @@ export function useBarberApp() {
   return {
     ready,
     auth,
-    serverUrl,
-    setServerUrl,
     authError,
     syncStatus,
     syncError,

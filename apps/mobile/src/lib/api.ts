@@ -1,5 +1,7 @@
 import type { MobileSession, QueueOperation, ServerAppointment, SyncResult } from '../types';
 
+const PRODUCTION_BACKEND_URL = 'https://barbershop-silk-two.vercel.app';
+
 type LoginResponse = {
   ok: boolean;
   token: string;
@@ -42,7 +44,7 @@ export function getApiBaseUrl(raw: string): string {
 
 export function getDefaultBackendUrl(): string {
   const raw = process.env.EXPO_PUBLIC_API_BASE_URL ?? '';
-  return raw ? getApiBaseUrl(raw) : '';
+  return raw ? getApiBaseUrl(raw) : PRODUCTION_BACKEND_URL;
 }
 
 export async function loginToBackend(

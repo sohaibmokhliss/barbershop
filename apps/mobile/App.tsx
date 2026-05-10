@@ -192,8 +192,6 @@ function ScreenShell({
 }
 
 function LoginScreen({
-  serverUrl,
-  setServerUrl,
   login,
   password,
   setLogin,
@@ -202,8 +200,6 @@ function LoginScreen({
   loading,
   error,
 }: {
-  serverUrl: string;
-  setServerUrl: (value: string) => void;
   login: string;
   password: string;
   setLogin: (value: string) => void;
@@ -251,22 +247,9 @@ function LoginScreen({
         <View style={styles.panelCard}>
           <Text style={styles.panelLabel}>Connexion</Text>
           <Text style={styles.panelCopy}>
-            Configure the backend URL once, then sign in with the barber account.
+            Connectez-vous avec le compte du barber. La synchronisation utilise déjà
+            le serveur du salon.
           </Text>
-
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Backend URL</Text>
-            <TextInput
-              value={serverUrl}
-              onChangeText={setServerUrl}
-              placeholder="http://localhost:8080"
-              placeholderTextColor="#94a3b8"
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="url"
-              style={styles.input}
-            />
-          </View>
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>Identifiant</Text>
@@ -543,8 +526,6 @@ export default function App() {
   const {
     ready,
     auth,
-    serverUrl,
-    setServerUrl,
     syncStatus,
     syncError,
     pendingCount,
@@ -605,8 +586,6 @@ export default function App() {
   if (!auth) {
     return (
       <LoginScreen
-        serverUrl={serverUrl}
-        setServerUrl={setServerUrl}
         login={login}
         password={password}
         setLogin={setLogin}
